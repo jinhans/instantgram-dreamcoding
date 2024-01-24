@@ -1,5 +1,6 @@
 import React from "react";
+import UserSearch from "../components/UserSearch";
 
 export default function SeacrhPage() {
-  return <p>Search Page</p>;
+  return <UserSearch />;
 }
