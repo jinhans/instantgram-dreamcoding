@@ -1,5 +1,8 @@
 import { AiOutlineHeart } from "react-icons/ai";
 
-export default function Heartlcon() {
-  return <AiOutlineHeart className="w-7 h-7" />;
+type Props = {
+  className?: string;
+};
+export default function Heartlcon({ className }: Props) {
+  return <AiOutlineHeart className={className || "w-7 h-7"} />;
 }
