@@ -8,6 +8,7 @@ type OAuthUser = {
   username: string;
   image?: string | null;
 };
+
 export async function addUser({ id, username, email, name, image }: OAuthUser) {
   return client.createIfNotExists({
     _id: id,
@@ -17,7 +18,7 @@ export async function addUser({ id, username, email, name, image }: OAuthUser) {
     name,
     image,
     following: [],
-    floowers: [],
+    followers: [],
     bookmarks: [],
   });
 }
@@ -40,7 +41,7 @@ export async function searchUsers(keyword?: string) {
     : "";
   return client
     .fetch(
-      `*[_type == "user" ${query}]{
+      `*[_type =="user" ${query}]{
       ...,
       "following": count(following),
       "followers": count(followers),
@@ -65,7 +66,8 @@ export async function getUserForProfile(username: string) {
       "following": count(following),
       "followers": count(followers),
       "posts": count(*[_type=="post" && author->username == "${username}"])
-    }`
+    }
+    `
     )
     .then((user) => ({
       ...user,
@@ -93,4 +95,28 @@ export async function removeBookmark(userId: string, postId: string) {
     .patch(userId)
     .unset([`bookmarks[_ref=="${postId}"]`])
     .commit();
+}
+
+export async function follow(myId: string, targetId: string) {
+  return client
+    .transaction() //
+    .patch(myId, (user) =>
+      user
+        .setIfMissing({ following: [] })
+        .append("following", [{ _ref: targetId, _type: "reference" }])
+    )
+    .patch(targetId, (user) =>
+      user
+        .setIfMissing({ followers: [] })
+        .append("followers", [{ _ref: myId, _type: "reference" }])
+    )
+    .commit({ autoGenerateArrayKeys: true });
+}
+
+export async function unfollow(myId: string, targetId: string) {
+  return client
+    .transaction() //
+    .patch(myId, (user) => user.unset([`following[_ref=="${targetId}"]`]))
+    .patch(targetId, (user) => user.unset([`followers[_ref=="${myId}"]`]))
+    .commit({ autoGenerateArrayKeys: true });
 }

@@ -6,8 +6,6 @@ import ToggleButton from "./ui/ToggleButton";
 import HeartFillIcon from "./ui/icons/HeartFillIcon";
 import BookmarkFillIcon from "./ui/icons/BookmarkFillIcon";
 import { Comment, SimplePost } from "@/model/post";
-import { useSession } from "next-auth/react";
-import { useSWRConfig } from "swr";
 import usePosts from "@/hooks/posts";
 import useMe from "@/hooks/me";
 import CommentForm from "./\bCommentForm";
