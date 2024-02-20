@@ -65,18 +65,42 @@ export async function getUserForProfile(username: string) {
       "id":_id,
       "following": count(following),
       "followers": count(followers),
-      "posts": count(*[_type=="post" && author->username == "${username}"])
-    }
-    `
+      "posts": count(*[_type=="post" && author->username == "${username}"]),
+    }`
     )
-    .then((user) => ({
-      ...user,
-      following: user.following ?? 0,
-      followers: user.followers ?? 0,
-      posts: user.posts ?? 0,
-    }));
+    .then((user) => {
+      console.log("user test", user);
+      return {
+        ...user,
+        following: user.following ?? 0,
+        followers: user.followers ?? 0,
+        posts: user.posts ?? 0,
+      };
+    });
 }
 
+export async function getUserListTest(username: string) {
+  return client
+    .fetch(
+      `*[_type == "user" && username == "${username}"][0]{
+      ...,
+      "id":_id,
+      "following": count(following),
+      "followers": count(followers),
+      "posts": count(*[_type=="post" && author->username == "${username}"])
+    }
+  `
+    )
+    .then((user) => {
+      console.log("user test", user);
+      return {
+        ...user,
+        following: user.following ?? 0,
+        followers: user.followers ?? 0,
+        posts: user.posts ?? 0,
+      };
+    });
+}
 export async function addBookmark(userId: string, postId: string) {
   return client
     .patch(userId) //
@@ -98,6 +122,7 @@ export async function removeBookmark(userId: string, postId: string) {
 }
 
 export async function follow(myId: string, targetId: string) {
+  console.log("myId", myId, "targetId", targetId);
   return client
     .transaction() //
     .patch(myId, (user) =>

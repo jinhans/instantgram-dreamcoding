@@ -25,7 +25,7 @@ export default function PostListCard({ post, priority = false }: Props) {
 
   return (
     <article className="rounded-lg shadow-md border border-gray-200">
-      <PostUserAvatar image={image} username={username} />
+      <PostUserAvatar image={userImage} username={username} />
       <Image
         className="w-full object-cover aspect-square"
         src={image}

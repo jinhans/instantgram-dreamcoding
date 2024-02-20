@@ -8,7 +8,7 @@ import BookmarkFillIcon from "./ui/icons/BookmarkFillIcon";
 import { Comment, SimplePost } from "@/model/post";
 import usePosts from "@/hooks/posts";
 import useMe from "@/hooks/me";
-import CommentForm from "./\bCommentForm";
+import CommentForm from "./CommentForm";
 
 type Props = {
   post: SimplePost;

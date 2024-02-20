@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import Image from "next/image";
 
 type AvatarSize = "small" | "medium" | "large" | "xlarge";
 type Props = {
